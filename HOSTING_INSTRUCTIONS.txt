@@ -1,0 +1,1 @@
+Use 000webhost, GitHub Pages, or Netlify. See the STRlCT_5PAGES zip for step-by-step instructions.
