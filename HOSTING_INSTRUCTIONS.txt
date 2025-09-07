@@ -1,1 +1,20 @@
-Use 000webhost, GitHub Pages, or Netlify. See the STRlCT_5PAGES zip for step-by-step instructions.
+Hosting Instructions for Express Holidays Website
+
+The Express Holidays website is hosted using GitHub Pages, which is a free static web hosting service provided by GitHub.
+
+Steps taken to deploy the site:
+
+1. Created a public repository on GitHub named "express-holidays".
+2. Uploaded all project files (index.html, maui.html, paris.html, tokyo.html, contact.html, and the assets folder) into the root directory of the repository.
+3. Went to the repository Settings → Pages.
+4. Under "Build and deployment":
+   - Selected "Deploy from a branch".
+   - Chose the "main" branch.
+   - Set the folder to "/ (root)".
+5. Saved the settings and waited approximately 1–3 minutes for the site to build.
+6. GitHub Pages published the site successfully.
+
+The site is live and accessible at the following URL:
+https://briw40.github.io/express-holidays/
+
+Disclaimer: This is an educational project, and no actual travel is offered.
