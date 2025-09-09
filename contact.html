@@ -3,7 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Contact · Express Holidays</title>
+  <title>Contact Us · Express Holidays</title>
+  <meta name="description" content="Contact Express Holidays — questions, quotes, and itinerary help. We’re here to plan your perfect trip.">
+  <meta name="keywords" content="contact, travel help, quote, itinerary, Express Holidays">
+
+  <!-- JS Sources:
+       Back-to-top: inspired by MDN Web Docs (Window.scrollTo with smooth behavior).
+       Lightbox: modal overlay pattern using vanilla JS event delegation.
+       Full APA citations are listed in Week5_Documentation.rtf. -->
+
   <link rel="icon" href="assets/logo.png">
   <style>
 :root{ --brand:#ff9800; --ink:#222; --hero-h:320px; }
@@ -18,26 +26,17 @@ nav a{background:#fff;color:var(--brand);padding:12px 22px;border-radius:999px;t
 nav a:hover{filter:brightness(.95)}
 nav a.active{background:#222;color:#fff}
 .topbar .logo{height:160px}
-.hero{position:relative;height:var(--hero-h);background:url('assets/banner_1920x320.jpg') center center no-repeat;background-size:100% 100%;}
+
+/* HERO */
+.hero{
+  position:relative;
+  height:var(--hero-h);
+  background:url('assets/banner_1920x320.jpg') center center no-repeat;
+  background-size:cover;
+}
 
 .main{position:relative;z-index:0;padding:28px 0}
 .main h1{margin:0 0 10px 0;font-size:32px}
-
-/* Home destination cards */
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-.card{border-radius:16px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08);border:1px solid #eee;background:#fff;text-decoration:none;color:inherit;display:block}
-.card img{width:100%;height:200px;object-fit:cover;display:block}
-.card .label{padding:12px 12px;font-weight:900;text-align:center}
-
-/* Galleries on destination pages */
-.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:8px 0 0 0}
-.gallery .thumb{border-radius:12px;overflow:hidden;border:1px solid #eee;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-.gallery .thumb img{width:100%;height:220px;object-fit:cover;display:block}
-
-/* Video embed */
-.section{margin-top:28px}
-.video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid #eee;box-shadow:0 8px 20px rgba(0,0,0,.06);background:#000}
-.video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 
 /* Contact layout */
 .contact-wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:start}
@@ -52,62 +51,83 @@ button:hover{filter:brightness(.95)}
 footer{margin-top:40px;border-top:1px solid #eee;background:#fafafa}
 footer .container{padding:14px 16px;font-size:12px;color:#666}
 
+/* Week 5 UI Enhancements */
+#toTop{
+  position:fixed; right:16px; bottom:16px; width:44px; height:44px; border-radius:50%;
+  border:none; background:#ff9800; color:#fff; font-size:20px; font-weight:800;
+  cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.25); opacity:0; transform:translateY(16px);
+  transition:opacity .25s, transform .25s; z-index:1000;
+}
+#toTop.show{ opacity:1; transform:translateY(0); }
+#lightbox{ position:fixed; inset:0; display:grid; place-items:center; visibility:hidden; opacity:0; transition:opacity .2s, visibility .2s; z-index:1000; }
+#lightbox.open{ visibility:visible; opacity:1; }
+#lightbox .lb-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.7); }
+#lightbox .lb-img{ position:relative; max-width:min(92vw,1200px); max-height:80vh; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+#lightbox .lb-close{ position:absolute; top:12px; right:16px; background:#222; color:#fff; border:none; border-radius:999px; width:36px; height:36px; font-size:22px; cursor:pointer; }
+
 /* Responsive */
 @media (max-width:980px){
   :root{ --hero-h:240px; }
-  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .topbar .logo{height:120px}
   .main h1{font-size:26px}
   .contact-wrap{grid-template-columns:1fr}
 }
-@media (max-width:640px){
-  .cards{grid-template-columns:1fr}
-  .gallery{grid-template-columns:1fr}
-}
-</style>
+  </style>
 </head>
 <body>
   <header>
     <div class="topbar">
       <div></div>
-      <nav><a href="index.html" class="">Home</a><a href="maui.html" class="">Maui</a><a href="paris.html" class="">Paris</a><a href="tokyo.html" class="">Tokyo</a><a href="contact.html" class="active">Contact</a><a href="references.html" class="">References</a></nav>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="maui.html">Maui</a>
+        <a href="paris.html">Paris</a>
+        <a href="tokyo.html">Tokyo</a>
+        <a href="contact.html" class="active">Contact</a>
+        <a href="references.html">References</a>
+      </nav>
       <div style="justify-self:end"><img class="logo" src="assets/logo.png" alt="Express Holidays logo"></div>
     </div>
     <div class="hero"></div>
   </header>
+
   <main class="main">
     <div class="container">
-      
-<h1>Contact Us</h1>
-<p>Our team is here to answer your questions and help design the perfect trip. Use the form below to reach us and begin planning your unforgettable journey with Express Holidays.</p>
+      <h1>Contact Us</h1>
+      <p>Our team is here to answer your questions and help design the perfect trip. Use the form below to reach us and begin planning your unforgettable journey with Express Holidays.</p>
 
-<div class="contact-wrap">
-  <div class="card-pane">
-    <form class="form" onsubmit="alert('Thanks! This demo form will be wired up in Week 5.'); return false;">
-      <input type="text" name="name" placeholder="Name" required>
-      <input type="email" name="email" placeholder="Email" required>
-      <textarea name="comments" rows="6" placeholder="Comments" required></textarea>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
-  <div class="card-pane">
-    <div class="kv">
-      <span class="label">Email</span><span><a href="mailto:info@expressholidays.example">info@expressholidays.example</a></span>
-      <span class="label">Phone</span><span>(555) 123‑4567</span>
-      <span class="label">Hours</span><span>Mon–Fri, 9am–6pm</span>
-      <span class="label">Address</span><span>123 Palm Ave, Suite 200, Honolulu, HI</span>
-    </div>
-  </div>
-</div>
+      <div class="contact-wrap">
+        <div class="card-pane">
+          <!-- Real Formspree endpoint + redirect -->
+          <form class="form" action="https://formspree.io/f/mnnbwddp" method="POST">
+            <input type="hidden" name="_subject" value="Express Holidays — Contact Form Submission">
+            <input type="hidden" name="_redirect" value="https://briw40.github.io/express-holidays/index.html">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <textarea name="comments" rows="6" placeholder="Comments" required></textarea>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
 
-
+        <div class="card-pane">
+          <div class="kv">
+            <span class="label">Email</span><span><a href="mailto:info@expressholidays.example">info@expressholidays.example</a></span>
+            <span class="label">Phone</span><span>(555) 123-4567</span>
+            <span class="label">Hours</span><span>Mon–Fri, 9am–6pm</span>
+            <span class="label">Address</span><span>123 Palm Ave, Suite 200, Honolulu, HI</span>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
+
   <footer>
     <div class="container">
       <strong>Disclaimer:</strong> This is a fictional website created for educational purposes. Express Holidays does not sell or offer travel services.
     </div>
   </footer>
+
+  <!-- Week 5 enhancements -->
+  <script src="assets/app.js"></script>
 </body>
 </html>
