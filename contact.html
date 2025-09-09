@@ -18,7 +18,10 @@ nav a{background:#fff;color:var(--brand);padding:12px 22px;border-radius:999px;t
 nav a:hover{filter:brightness(.95)}
 nav a.active{background:#222;color:#fff}
 .topbar .logo{height:160px}
-.hero{position:relative;height:var(--hero-h);background:url('assets/banner_1920x320.jpg') center center no-repeat;background-size:100% 100%;}
+
+/* HERO uses non-stretched image (see section 2) */
+.hero img{display:block;width:100%;height:auto}
+
 .main{position:relative;z-index:0;padding:28px 0}
 .main h1{margin:0 0 10px 0;font-size:32px}
 
@@ -36,12 +39,11 @@ footer{margin-top:40px;border-top:1px solid #eee;background:#fafafa}
 footer .container{padding:14px 16px;font-size:12px;color:#666}
 
 @media (max-width:980px){
-  :root{ --hero-h:240px; }
   .topbar .logo{height:120px}
   .main h1{font-size:26px}
   .contact-wrap{grid-template-columns:1fr}
 }
-</style>
+  </style>
 </head>
 <body>
   <header>
@@ -57,27 +59,35 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
       </nav>
       <div style="justify-self:end"><img class="logo" src="assets/logo.png" alt="Express Holidays logo"></div>
     </div>
-    <div class="hero"></div>
+    <!-- NON-STRETCHED HERO IMAGE -->
+    <div class="hero">
+      <img src="assets/banner_1920x320.jpg" alt="Express Holidays banner">
+    </div>
   </header>
+
   <main class="main">
     <div class="container">
-      
       <h1>Contact Us</h1>
       <p>Our team is here to answer your questions and help design the perfect trip. Use the form below to reach us and begin planning your unforgettable journey with Express Holidays.</p>
 
       <div class="contact-wrap">
         <div class="card-pane">
-          <form class="form" action="https://formspree.io/f/mnnbwddp" method="POST">
+          <!-- Fallback: action includes ?redirect= (if JS fails) -->
+          <form class="form" id="contactForm"
+                action="https://formspree.io/f/mnnbwddp?redirect=https://briw40.github.io/express-holidays/thankyou.html"
+                method="POST">
             <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <textarea name="comments" rows="6" placeholder="Comments" required></textarea>
 
-            <!-- Redirect to thankyou.html -->
-            <input type="hidden" name="_redirect" value="https://briw40.github.io/express-holidays/thankyou.html">
+            <!-- Honeypot (spam trap) — hidden -->
+            <input type="text" name="_gotcha" autocomplete="off" style="display:none">
 
-            <button type="submit">Submit</button>
+            <button type="submit" id="submitBtn">Submit</button>
+            <small id="formMsg" style="margin-top:6px;color:#555;display:block;"></small>
           </form>
         </div>
+
         <div class="card-pane">
           <div class="kv">
             <span class="label">Email</span><span><a href="mailto:info@expressholidays.example">info@expressholidays.example</a></span>
@@ -87,13 +97,47 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
           </div>
         </div>
       </div>
-
     </div>
   </main>
+
   <footer>
     <div class="container">
       <strong>Disclaimer:</strong> This is a fictional website created for educational purposes. Express Holidays does not sell or offer travel services.
     </div>
   </footer>
+
+  <!-- AJAX submit: if JS runs, we control redirect -->
+  <script>
+  (function(){
+    const form = document.getElementById('contactForm');
+    const msg  = document.getElementById('formMsg');
+    const btn  = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // stop native navigation
+      msg.textContent = 'Sending...';
+      btn.disabled = true;
+
+      try {
+        const data = new FormData(form);
+        const res  = await fetch('https://formspree.io/f/mnnbwddp', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data
+        });
+
+        if (res.ok) {
+          window.location.href = 'thankyou.html'; // our page
+        } else {
+          msg.textContent = 'There was a problem sending your message. Please try again.';
+          btn.disabled = false;
+        }
+      } catch(err) {
+        msg.textContent = 'Network error. Please try again.';
+        btn.disabled = false;
+      }
+    });
+  })();
+  </script>
 </body>
 </html>
