@@ -4,6 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Home · Express Holidays</title>
+  <meta name="description" content="Express Holidays — curated vacation packages for families, couples, and solo travelers. Discover Maui, Paris, and Tokyo with stress-free planning.">
+  <meta name="keywords" content="travel, vacations, Maui, Paris, Tokyo, family travel, couples trips, solo travel, Express Holidays">
+
+  <!-- JS Sources:
+       Back-to-top: inspired by MDN Web Docs (Window.scrollTo with smooth behavior).
+       Lightbox: modal overlay pattern using vanilla JS event delegation.
+       Full APA citations are listed in Week5_Documentation.rtf. -->
+
   <link rel="icon" href="assets/logo.png">
   <style>
 :root{ --brand:#ff9800; --ink:#222; --hero-h:320px; }
@@ -18,7 +26,14 @@ nav a{background:#fff;color:var(--brand);padding:12px 22px;border-radius:999px;t
 nav a:hover{filter:brightness(.95)}
 nav a.active{background:#222;color:#fff}
 .topbar .logo{height:160px}
-.hero{position:relative;height:var(--hero-h);background:url('assets/banner_1920x320.jpg') center center no-repeat;background-size:100% 100%;}
+
+/* HERO: keep aspect ratio, fill edge-to-edge */
+.hero{
+  position:relative;
+  height:var(--hero-h);
+  background:url('assets/banner_1920x320.jpg') center center no-repeat;
+  background-size:cover;
+}
 
 .main{position:relative;z-index:0;padding:28px 0}
 .main h1{margin:0 0 10px 0;font-size:32px}
@@ -52,6 +67,20 @@ button:hover{filter:brightness(.95)}
 footer{margin-top:40px;border-top:1px solid #eee;background:#fafafa}
 footer .container{padding:14px 16px;font-size:12px;color:#666}
 
+/* Week 5 UI Enhancements */
+#toTop{
+  position:fixed; right:16px; bottom:16px; width:44px; height:44px; border-radius:50%;
+  border:none; background:#ff9800; color:#fff; font-size:20px; font-weight:800;
+  cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.25); opacity:0; transform:translateY(16px);
+  transition:opacity .25s, transform .25s; z-index:1000;
+}
+#toTop.show{ opacity:1; transform:translateY(0); }
+#lightbox{ position:fixed; inset:0; display:grid; place-items:center; visibility:hidden; opacity:0; transition:opacity .2s, visibility .2s; z-index:1000; }
+#lightbox.open{ visibility:visible; opacity:1; }
+#lightbox .lb-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.7); }
+#lightbox .lb-img{ position:relative; max-width:min(92vw,1200px); max-height:80vh; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+#lightbox .lb-close{ position:absolute; top:12px; right:16px; background:#222; color:#fff; border:none; border-radius:999px; width:36px; height:36px; font-size:22px; cursor:pointer; }
+
 /* Responsive */
 @media (max-width:980px){
   :root{ --hero-h:240px; }
@@ -65,43 +94,56 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
   .cards{grid-template-columns:1fr}
   .gallery{grid-template-columns:1fr}
 }
-</style>
+  </style>
 </head>
 <body>
   <header>
     <div class="topbar">
       <div></div>
-      <nav><a href="index.html" class="active">Home</a><a href="maui.html" class="">Maui</a><a href="paris.html" class="">Paris</a><a href="tokyo.html" class="">Tokyo</a><a href="contact.html" class="">Contact</a><a href="references.html" class="">References</a></nav>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="maui.html">Maui</a>
+        <a href="paris.html">Paris</a>
+        <a href="tokyo.html">Tokyo</a>
+        <a href="contact.html">Contact</a>
+        <a href="references.html">References</a>
+      </nav>
       <div style="justify-self:end"><img class="logo" src="assets/logo.png" alt="Express Holidays logo"></div>
     </div>
-    <div class="hero"><audio autoplay loop src="assets/sea_waves.wav" style="position:absolute;left:-9999px;top:-9999px;"></audio></div>
+    <div class="hero">
+      <audio autoplay loop src="assets/sea_waves.wav" style="position:absolute;left:-9999px;top:-9999px;"></audio>
+    </div>
   </header>
+
   <main class="main">
     <div class="container">
-      
-<h1>Welcome to Express Holiday Travel</h1>
-<p>Express Holidays is a travel company that specializes in vacation packages for families, couples, and solo travelers. The homepage introduces the company and highlights its mission to provide memorable travel experiences. Whether planning a family getaway, a romantic escape, or a solo adventure, Express Holidays connects travelers with destinations that inspire and excite. Our carefully crafted packages ensure every trip is memorable and stress-free.</p>
-<section class="cards">
-  <a class="card" href="maui.html" aria-label="Go to Maui">
-    <img src="assets/maui2.jpg" alt="Maui beach">
-    <div class="label">Discover Maui</div>
-  </a>
-  <a class="card" href="paris.html" aria-label="Go to Paris">
-    <img src="assets/paris2.jpg" alt="Paris — Seine at sunset">
-    <div class="label">Discover Paris</div>
-  </a>
-  <a class="card" href="tokyo.html" aria-label="Go to Tokyo">
-    <img src="assets/tokyo1.jpg" alt="Tokyo street lights">
-    <div class="label">Discover Tokyo</div>
-  </a>
-</section>
+      <h1>Welcome to Express Holiday Travel</h1>
+      <p>Express Holidays is a travel company that specializes in vacation packages for families, couples, and solo travelers. The homepage introduces the company and highlights its mission to provide memorable travel experiences. Whether planning a family getaway, a romantic escape, or a solo adventure, Express Holidays connects travelers with destinations that inspire and excite. Our carefully crafted packages ensure every trip is memorable and stress-free.</p>
 
+      <section class="cards">
+        <a class="card" href="maui.html" aria-label="Go to Maui">
+          <img src="assets/maui2.jpg" alt="Maui beach">
+          <div class="label">Discover Maui</div>
+        </a>
+        <a class="card" href="paris.html" aria-label="Go to Paris">
+          <img src="assets/paris2.jpg" alt="Paris — Seine at sunset">
+          <div class="label">Discover Paris</div>
+        </a>
+        <a class="card" href="tokyo.html" aria-label="Go to Tokyo">
+          <img src="assets/tokyo1.jpg" alt="Tokyo street lights">
+          <div class="label">Discover Tokyo</div>
+        </a>
+      </section>
     </div>
   </main>
+
   <footer>
     <div class="container">
       <strong>Disclaimer:</strong> This is a fictional website created for educational purposes. Express Holidays does not sell or offer travel services.
     </div>
   </footer>
+
+  <!-- Week 5 enhancements -->
+  <script src="assets/app.js"></script>
 </body>
 </html>
