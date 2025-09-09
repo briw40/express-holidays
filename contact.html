@@ -108,36 +108,42 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
 
   <!-- AJAX submit: if JS runs, we control redirect -->
   <script>
-  (function(){
-    const form = document.getElementById('contactForm');
-    const msg  = document.getElementById('formMsg');
-    const btn  = document.getElementById('submitBtn');
+(function(){
+  const form = document.getElementById('contactForm');
+  const msg  = document.getElementById('formMsg');
+  const btn  = document.getElementById('submitBtn');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // stop native navigation
-      msg.textContent = 'Sending...';
-      btn.disabled = true;
+  const THANK_URL = 'thank-you.html';
+  const FULL_THANK_URL = 'https://briw40.github.io/express-holidays/thank-you.html';
 
-      try {
-        const data = new FormData(form);
-        const res  = await fetch('https://formspree.io/f/mnnbwddp', {
-          method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: data
-        });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault(); // stop normal navigation
+    msg.textContent = 'Sending...';
+    btn.disabled = true;
 
-        if (res.ok) {
-          window.location.href = 'thank-you.html'; // our page
-        } else {
-          msg.textContent = 'There was a problem sending your message. Please try again.';
-          btn.disabled = false;
-        }
-      } catch(err) {
-        msg.textContent = 'Network error. Please try again.';
-        btn.disabled = false;
-      }
-    });
-  })();
-  </script>
+    try {
+      const data = new FormData(form);
+      // Ensure _redirect is included in the posted payload, too:
+      data.set('_redirect', FULL_THANK_URL);
+
+      const res = await fetch('https://formspree.io/f/mnnbwddp', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: data,
+        redirect: 'follow',
+        credentials: 'omit'
+      });
+
+      // No matter what Formspree returns, send the user to your own page
+      window.location.assign(THANK_URL);
+    } catch (err) {
+      // If network fails, let the user try again (and they'll still have the fallback action redirect)
+      msg.textContent = 'Network error. Please try again.';
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
