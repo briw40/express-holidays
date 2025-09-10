@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Contact · Express Holidays</title>
+  <meta name="description" content="Contact Express Holidays to start planning your next trip.">
+  <meta name="keywords" content="Express Holidays, travel, contact, vacations, trips">
   <link rel="icon" href="assets/logo.png">
   <style>
 :root{ --brand:#ff9800; --ink:#222; --hero-h:320px; }
@@ -19,8 +21,13 @@ nav a:hover{filter:brightness(.95)}
 nav a.active{background:#222;color:#fff}
 .topbar .logo{height:160px}
 
-/* HERO uses non-stretched image (see section 2) */
-.hero img{display:block;width:100%;height:auto}
+/* HERO matches all other pages */
+.hero {
+  position:relative;
+  height:var(--hero-h);
+  background:url('assets/banner_1920x320.jpg') center center no-repeat;
+  background-size:100% 100%;
+}
 
 .main{position:relative;z-index:0;padding:28px 0}
 .main h1{margin:0 0 10px 0;font-size:32px}
@@ -59,10 +66,7 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
       </nav>
       <div style="justify-self:end"><img class="logo" src="assets/logo.png" alt="Express Holidays logo"></div>
     </div>
-    <!-- NON-STRETCHED HERO IMAGE -->
-    <div class="hero">
-      <img src="assets/banner_1920x320.jpg" alt="Express Holidays banner">
-    </div>
+    <div class="hero"></div>
   </header>
 
   <main class="main">
@@ -72,7 +76,6 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
 
       <div class="contact-wrap">
         <div class="card-pane">
-          <!-- Fallback: action includes ?redirect= (if JS fails) -->
           <form class="form" id="contactForm"
                 action="https://formspree.io/f/mnnbwddp?redirect=https://briw40.github.io/express-holidays/thank-you.html"
                 method="POST">
@@ -80,7 +83,6 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
             <input type="email" name="email" placeholder="Email" required>
             <textarea name="comments" rows="6" placeholder="Comments" required></textarea>
 
-            <!-- Honeypot (spam trap) — hidden -->
             <input type="text" name="_gotcha" autocomplete="off" style="display:none">
 
             <button type="submit" id="submitBtn">Submit</button>
@@ -106,7 +108,6 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
     </div>
   </footer>
 
-  <!-- AJAX submit: if JS runs, we control redirect -->
   <script>
 (function(){
   const form = document.getElementById('contactForm');
@@ -117,33 +118,27 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
   const FULL_THANK_URL = 'https://briw40.github.io/express-holidays/thank-you.html';
 
   form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // stop normal navigation
+    e.preventDefault();
     msg.textContent = 'Sending...';
     btn.disabled = true;
 
     try {
       const data = new FormData(form);
-      // Ensure _redirect is included in the posted payload, too:
       data.set('_redirect', FULL_THANK_URL);
 
       const res = await fetch('https://formspree.io/f/mnnbwddp', {
         method: 'POST',
         headers: { 'Accept': 'application/json' },
-        body: data,
-        redirect: 'follow',
-        credentials: 'omit'
+        body: data
       });
 
-      // No matter what Formspree returns, send the user to your own page
       window.location.assign(THANK_URL);
     } catch (err) {
-      // If network fails, let the user try again (and they'll still have the fallback action redirect)
       msg.textContent = 'Network error. Please try again.';
       btn.disabled = false;
     }
   });
 })();
-</script>
-
+  </script>
 </body>
 </html>
