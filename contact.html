@@ -6,6 +6,7 @@
   <title>Contact · Express Holidays</title>
   <meta name="description" content="Contact Express Holidays to start planning your next trip.">
   <meta name="keywords" content="Express Holidays, travel, contact, vacations, trips">
+
   <link rel="icon" href="assets/logo.png">
   <style>
 :root{ --brand:#ff9800; --ink:#222; --hero-h:320px; }
@@ -21,12 +22,12 @@ nav a:hover{filter:brightness(.95)}
 nav a.active{background:#222;color:#fff}
 .topbar .logo{height:160px}
 
-/* HERO — identical to other pages */
+/* HERO: identical to Paris page */
 .hero{
   position:relative;
   height:var(--hero-h);
   background:url('assets/banner_1920x320.jpg') center center no-repeat;
-  background-size:100% 100%; /* matches other pages exactly */
+  background-size:cover;
 }
 
 .main{position:relative;z-index:0;padding:28px 0}
@@ -45,15 +46,30 @@ button:hover{filter:brightness(.95)}
 footer{margin-top:40px;border-top:1px solid #eee;background:#fafafa}
 footer .container{padding:14px 16px;font-size:12px;color:#666}
 
-/* Responsive — same hero heights as other pages */
+/* Week 5 UI Enhancements (same include pattern as Paris) */
+#toTop{
+  position:fixed; right:16px; bottom:16px; width:44px; height:44px; border-radius:50%;
+  border:none; background:#ff9800; color:#fff; font-size:20px; font-weight:800;
+  cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.25); opacity:0; transform:translateY(16px);
+  transition:opacity .25s, transform .25s; z-index:1000;
+}
+#toTop.show{ opacity:1; transform:translateY(0); }
+#lightbox{ position:fixed; inset:0; display:grid; place-items:center; visibility:hidden; opacity:0; transition:opacity .2s, visibility .2s; z-index:1000; }
+#lightbox.open{ visibility:visible; opacity:1; }
+#lightbox .lb-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.7); }
+#lightbox .lb-img{ position:relative; max-width:min(92vw,1200px); max-height:80vh; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+#lightbox .lb-close{ position:absolute; top:12px; right:16px; background:#222; color:#fff; border:none; border-radius:999px; width:36px; height:36px; font-size:22px; cursor:pointer; }
+
+/* Responsive: same hero heights as Paris */
 @media (max-width:980px){
-  :root{ --hero-h:240px; }       /* <- ensure same reduced height */
+  :root{ --hero-h:240px; }
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   .topbar .logo{height:120px}
   .main h1{font-size:26px}
   .contact-wrap{grid-template-columns:1fr}
 }
 @media (max-width:640px){
-  :root{ --hero-h:200px; }       /* <- phone height same as others */
+  .cards{grid-template-columns:1fr}
 }
   </style>
 </head>
@@ -87,9 +103,7 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
             <input type="text" name="name" placeholder="Name" required>
             <input type="email" name="email" placeholder="Email" required>
             <textarea name="comments" rows="6" placeholder="Comments" required></textarea>
-
             <input type="text" name="_gotcha" autocomplete="off" style="display:none">
-
             <button type="submit" id="submitBtn">Submit</button>
             <small id="formMsg" style="margin-top:6px;color:#555;display:block;"></small>
           </form>
@@ -113,37 +127,41 @@ footer .container{padding:14px 16px;font-size:12px;color:#666}
     </div>
   </footer>
 
+  <!-- Week 5 enhancements (same include as Paris) -->
+  <script src="assets/app.js"></script>
+
+  <!-- Formspree AJAX redirect -->
   <script>
-(function(){
-  const form = document.getElementById('contactForm');
-  const msg  = document.getElementById('formMsg');
-  const btn  = document.getElementById('submitBtn');
+  (function(){
+    const form = document.getElementById('contactForm');
+    const msg  = document.getElementById('formMsg');
+    const btn  = document.getElementById('submitBtn');
 
-  const THANK_URL = 'thank-you.html';
-  const FULL_THANK_URL = 'https://briw40.github.io/express-holidays/thank-you.html';
+    const THANK_URL = 'thank-you.html';
+    const FULL_THANK_URL = 'https://briw40.github.io/express-holidays/thank-you.html';
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.textContent = 'Sending...';
-    btn.disabled = true;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = 'Sending...';
+      btn.disabled = true;
 
-    try {
-      const data = new FormData(form);
-      data.set('_redirect', FULL_THANK_URL);
+      try {
+        const data = new FormData(form);
+        data.set('_redirect', FULL_THANK_URL);
 
-      await fetch('https://formspree.io/f/mnnbwddp', {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: data
-      });
+        await fetch('https://formspree.io/f/mnnbwddp', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data
+        });
 
-      window.location.assign(THANK_URL);
-    } catch (err) {
-      msg.textContent = 'Network error. Please try again.';
-      btn.disabled = false;
-    }
-  });
-})();
+        window.location.assign(THANK_URL);
+      } catch (err) {
+        msg.textContent = 'Network error. Please try again.';
+        btn.disabled = false;
+      }
+    });
+  })();
   </script>
 </body>
 </html>
